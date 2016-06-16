@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="videoApp">
+<head>
+    <title>Paella Recorder</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/prettyPhoto.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+	<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.slate.min.css" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="resources/style/style_dark.css" id="paellaSkin" type="text/css" media="screen" title="no title" charset="utf-8">
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+	
+	<script src="javascript/angularjs.js"></script>
+	
+    <link rel="shortcut icon" href="images/ico/faviconBlue.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/icon144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/icon114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/icon72.png">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/ico/icon57.png">
+	
+	</head><!--/head-->
+
+<body data-spy="scroll" data-target="#nav1bar" data-offset="0">
+    <header id="header" role="banner">
+        <div class="container1">
+            <div id="nav1bar" class="nav1bar nav1bar-default">
+                <div class="nav1bar-header">
+                    <button type="button" class="nav1bar-toggle" data-toggle="collapse" data-target=".nav1bar-collapse">
+                        <span class="sr-only">Toggle nav1igation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse nav1bar-collapse">
+                    <ul class="nav1 nav1bar-nav1">
+                        <li class="active"><a href="#main-slider"><i class="icon-home"></i></a></li>
+						<li><a href="#upload">Upload</a></li>
+                        <li><a href="#recordPart">Record</a></li>
+                        <li><a href="#visualize">Visualize</a></li>
+                        <li><a href="#download">Download</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header><!--/#header-->
+
+    <section id="main-slider" class="carousel">
+        <div class="carousel-inner">
+            <div class="item active">
+                <div class="container1">
+                    <div class="carousel-content">
+                        <h1 class="ttl">Paella Recorder</h1>
+                        <p class="lead">Welcome to the Paella Recorder, the Paella recording tool.</p>
+                    </div>
+                </div>
+            </div><!--/.item-->
+            <div class="item">
+                <div class="container1">
+                    <div class="carousel-content">
+                        <h1 class="ttl">How to use it</h1>
+                        <p class="lead">Here's a little tutorial to learn how to use this tool.</p>
+                    </div>
+                </div>
+            </div><!--/.item-->
+			<div class="item">
+                <div class="container1">
+                    <div class="carousel-content">
+                        <h1 class="ttl">1. Upload</h1>
+                        <p class="lead">Select and upload a presentation. It musts be a PDF file.</p>
+                    </div>
+                </div>
+            </div><!--/.item-->
+			<div class="item">
+                <div class="container1">
+                    <div class="carousel-content">
+                        <h1 class="ttl">2. Record</h1>
+                        <p class="lead">Record a video and change the current displayed slide of your presentation.</p>
+                    </div>
+                </div>
+            </div><!--/.item-->
+			<div class="item">
+                <div class="container1">
+                    <div class="carousel-content">
+                        <h1 class="ttl">3. Visualize</h1>
+                        <p class="lead">Visualize into a Paella Player your recording.</p>
+                    </div>
+                </div>
+            </div><!--/.item-->
+			<div class="item">
+                <div class="container1">
+                    <div class="carousel-content">
+                        <h1 class="ttl">4. Download</h1>
+                        <p class="lead">Download your presentation in your computer or send it to the server.</p>
+                    </div>
+                </div>
+            </div><!--/.item-->
+			
+        </div><!--/.carousel-inner-->
+        <a class="prev" href="#main-slider" data-slide="prev"><i class="icon-angle-left"></i></a>
+        <a class="next" href="#main-slider" data-slide="next"><i class="icon-angle-right"></i></a>
+    </section><!--/#main-slider-->
+<section ng-controller="videoCtrl" ud="ctrl">
+    <section id="upload">
+        <div class="container1">
+            <div class="box first">
+                <div class="row">
+                    <div class="center">
+                        <h2 class="gr">Upload your presentation</h2>
+						<p class="lead" style="color:black;">Select your PowerPoint. <div class="text-danger lead">It must be in PDF format !</div></p>
+						<center><input type="file" id="myFile" onchange="angular.element(this).scope().upload()" style="background-color:#52B6EC;color:white;border-radius:6px;"></input></center>
+						<canvas id="the-canvas" style="display:none;"></canvas>
+                    </div><!--/.col-md-6 center gap text-center-->
+                </div><!--/.row-->
+            </div><!--/.box-->
+        </div><!--/.container1-->
+    </section><!--/#upload-->
+
+    <section id="recordPart">
+        <div class="container1">
+            <div class="box center">
+			<div><h2 class="gr center">Record</h2></div>
+				<div id="le" class="center text-center" style="float:left;">
+			
+				<!--Record stream-->
+				<p><video id="record" width="500" height="375" autoplay muted></video></p>
+				
+				<!--Button Start recording, starts the recording-->
+				<button id="staRec" class="btn1 btn1-primary btn1-lg" ng-click="lecture()" ng-show="dontRecord" style="display:none;">Start recording</button>
+				
+				<!--Button Resume, only visible when recording is in pause and when the users never stopped recording-->
+				<button class="btn1 btn1-primary btn1-lg" ng-click="resume()" ng-show="!play && !dontRecord && neverStop">Play</button>
+				
+				<!--Button Pause, only visible when recording is running and when the users never stopped recording-->
+				<button class="btn1 btn1-primary btn1-lg" ng-click="pause()" ng-show="play && neverStop && !dontRecord">Pause</button>
+				
+				<!--Button Stop, as indicated by his name it stops the recording-->
+				<button class="btn1 btn1-primary btn1-lg" ng-click="stop()" ng-show="!dontRecord && !end">Stop recording</button>
+			
+				</div>
+				<div id="ri" class="center text-center" style="float:right;">
+					<p><canvas id="dispPartOne" style="center;border-style:ridge; border-color:#52B6EC; " width="500" height="375">Canvas is not supported by your browser</canvas></p>
+					<p id="instruc"  style="color:black;">No presentation to display yet. Please, upload a presentation.</p>
+					<button id="prev" style="display:none;" class="btn1 btn1-primary btn1-lg" ng-click="previousSlide()"><</button>
+					<button id="nex" style="display:none;" class="btn1 btn1-primary btn1-lg" ng-click="nextSlide()">></button>
+				</div>
+				<div style="clear:both"></div>
+            </div><!--/.box-->
+        </div><!--/.container1-->
+    </section><!--/#recordPart-->
+
+    <section id="visualize">
+        <div class="container1">
+            <div class="box">
+                <div class="center">
+				    <h2 id="visuaRecor" class="gr">Visualize your recording</h2>
+					<div class="gap"></div>
+                    <div id="playerContainer" style="display:block; color:black;"  width="620"></div>
+					<div id="noRecYet" style="color:black;"> There's no recording to display yet in the Paella Player.</div>
+					<div id="completeTheEmpty" style="display:none;">All<br> these<br> lines<br> are<br> used<br> for<br> only<br> one<br> thing :<br>displaying<br> well<br> the paella player.<br>In fact, it takes<br> the full size of it<br>container<br>. So by adding<br> white text which won't be<br>see I can change the size of it<br> container. Of courses I<br> tried to do it with height<br> for example but it wasn't<br> working.</div>
+			   </div><!--/.center-->   
+            </div> 
+        </div>
+    </section><!--/#visualize-->
+
+    <section id="download">
+        <div class="container1">
+            <div class="box">
+                <div class="center">
+                    <h2 class="gr">Download your recording</h2><br>
+					<button class="btn1 btn1-primary btn1-lg" ng-click="dlUser()" id="btn1DL">Save your video on your computer</button>
+					<!--<button class="btn1 btn1-primary btn1-lg" ng-click="sendServ()">Send your video to the server</button>-->
+                 </div>
+            </div><!--/.box-->
+        </div><!--/.container1-->
+    </section><!--/#download-->
+</section>
+
+    <footer id="footer">
+        <div class="container1">
+            <div class="row">
+                <div class="col-sm-6">
+                    Website developed by Nathan Garnaud for the Universitat Polit&egrave;cnica de Val&egrave;ncia
+                </div>
+                <div class="col-sm-6">
+                    <img class="pull-right" src="images/shapebootstrap.png" alt="ShapeBootstrap" title="ShapeBootstrap">
+                </div>
+            </div>
+        </div>
+    </footer><!--/#footer-->
+
+    <script src="jsDisplay/jquery.js"></script>
+    <script src="jsDisplay/bootstrap.min.js"></script>
+    <script src="jsDisplay/jquery.isotope.min.js"></script>
+    <script src="jsDisplay/jquery.prettyPhoto.js"></script>
+    <script src="jsDisplay/main.js"></script>
+	<script type="text/javascript" src="https://rawgithub.com/mozilla/pdf.js/gh-pages/build/pdf.js"></script>
+	<script type="text/javascript" src="javascript/swfobject.js"></script>
+	<script type="text/javascript" src="javascript/base.js"></script>
+	<!--<script type="text/javascript" src="javascript/jquery.js"></script>-->
+	<script type="text/javascript" src="javascript/lunr.min.js"></script>
+	<!--<script type="text/javascript" src="javascript/require.js"></script>-->
+	<script type="text/javascript" src="javascript/paella_player.js"></script>
+		
+	<script type="text/javascript" src="paella-standalone.js"></script>
+	<script src="javascript/jszip/dist/jszip.js"></script>
+	<script src="javascript/FileSaver.js"></script>
+    <script src="javascript/mainJs/main.js"></script>
+</body>
+</html>
